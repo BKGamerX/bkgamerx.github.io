@@ -1,1 +1,403 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
 
+  <!-- اللوجو -->
+  <link rel="icon" type="image/jpeg" sizes="512x512" href="https://plain-eeur-prod-public.komododecks.com/202609/05/z3sFMrNTXw7pQCqK2Cmo/image.jpg">
+  <link rel="apple-touch-icon" href="https://plain-eeur-prod-public.komododecks.com/202609/05/z3sFMrNTXw7pQCqK2Cmo/image.jpg">
+
+  <title>متجر أبو نجم - أفضل متجر ألعاب بلايستيشن وحسابات سوني</title>
+  <meta name="description" content="متجر أبو نجم - أفضل متجر لألعاب بلايستيشن وحسابات سوني. أسعار منافسة، تسليم فوري، وضمان وأمان 100%.">
+  <meta name="keywords" content="متجر ابو نجم, متجر ابو نجم للبلايستيشن, متجر ابو نجم لحسابات السوني, حسابات سوني, حسابات بلايستيشن, العاب بلايستيشن, العاب PS5, العاب PS4, شحن العاب, بطاقات بلايستيشن, حساب بلايستيشن بلس, ابو نجم ستور, abu najm store, abo najm store, playstation store saudi">
+  <meta name="author" content="Khalid Ahmed Abdu">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+
+  <!-- Open Graph -->
+  <meta property="og:site_name" content="متجر أبو نجم">
+  <meta property="og:title" content="متجر أبو نجم - أفضل متجر ألعاب بلايستيشن وحسابات سوني">
+  <meta property="og:description" content="أسعار منافسة، تسليم فوري، ثقة وأمان 100%.">
+  <meta property="og:image" content="https://plain-eeur-prod-public.komododecks.com/202609/05/z3sFMrNTXw7pQCqK2Cmo/image.jpg">
+  <meta property="og:image:width" content="512">
+  <meta property="og:image:height" content="512">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://bkgamerx.github.io/">
+  <meta property="og:locale" content="ar_SA">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="متجر أبو نجم - أفضل متجر ألعاب بلايستيشن وحسابات سوني">
+  <meta name="twitter:description" content="أسعار منافسة، تسليم فوري، ثقة وأمان 100%.">
+  <meta name="twitter:image" content="https://plain-eeur-prod-public.komododecks.com/202609/05/z3sFMrNTXw7pQCqK2Cmo/image.jpg">
+
+  <!-- Structured Data: WebSite (site name signal) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "متجر أبو نجم",
+    "alternateName": ["Abo Najm Store", "bkgamerx.github.io"],
+    "url": "https://bkgamerx.github.io/",
+    "image": "https://plain-eeur-prod-public.komododecks.com/202609/05/z3sFMrNTXw7pQCqK2Cmo/image.jpg",
+    "description": "أفضل متجر لألعاب بلايستيشن وحسابات سوني. أسعار منافسة، تسليم فوري، وضمان وأمان 100%."
+  }
+  </script>
+
+  <!-- Structured Data: Organization -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "متجر أبو نجم",
+    "url": "https://bkgamerx.github.io/",
+    "logo": "https://plain-eeur-prod-public.komododecks.com/202609/05/z3sFMrNTXw7pQCqK2Cmo/image.jpg",
+    "sameAs": [
+      "https://wa.me/966570587323",
+      "https://haraj.com.sa/users/%D9%85%D8%AA%D8%AC%D8%B1%20%D8%A7%D8%A8%D9%88%20%D9%86%D8%AC%D9%85%201"
+    ]
+  }
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: serif;
+      margin: 0;
+      background-image: url("https://cdn.imageurlgenerator.com/uploads/9ffad68e-6731-428d-a71f-73a3bce53a12.gif");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-attachment: fixed;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      padding: 40px 20px;
+    }
+    .cards-row{
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      width: 100%;
+    }
+    .card{
+      background: rgb(0, 0, 0);
+      background-image: url("https://plain-eeur-prod-public.komododecks.com/202609/05/VLAFaUMSQexnzZPrPcVq/image.jpg");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      border-radius: 20px;
+      width: 800px;
+      max-width: 96%;
+      aspect-ratio: 1536 / 1024;
+    }
+    .card2{
+      background: rgb(0, 0, 0);
+      background-image: url("https://plain-eeur-prod-public.komododecks.com/202609/04/rx10qH7lPcSFPOXWI0hg/image.jpg");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      border-radius: 20px;
+      width: 800px;
+      max-width: 96%;
+      aspect-ratio: 1536 / 1024;
+    }
+    .card3{
+      background: rgb(0, 0, 0);
+      background-image: url("https://plain-eeur-prod-public.komododecks.com/202609/04/JVvcHjeZTNQYzqaZ0yj4/image.jpg");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      border-radius: 20px;
+      width: 800px;
+      max-width: 96%;
+      aspect-ratio: 1536 / 1024;
+    }
+    .card4{
+      background: rgb(249, 247, 247);
+      background-image: url("https://plain-eeur-prod-public.komododecks.com/202609/05/An1w7tSBUMjoFO96Xzf3/image.jpg");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: right center;
+      padding: 20px;
+      border-radius: 20px;
+      width: 480px;
+      max-width: 92%;
+    }
+    .card5{
+      background: rgb(0, 0, 0);
+      background-image: url("https://plain-eeur-prod-public.komododecks.com/202609/05/SpLWug0EL1pn0qRzfhz5/image.jpg");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      border-radius: 20px;
+      width: 800px;
+      max-width: 96%;
+      aspect-ratio: 1536 / 1024;
+    }
+    .float-btn{
+      position: fixed;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 28px;
+      color: rgb(250, 250, 250);
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgb(0, 0, 0);
+      z-index: 999;
+      animation: pulse 1.8s infinite;
+      overflow: hidden;
+    }
+    .whatsapp-float {
+      background: white;
+      bottom: 100px;
+    }
+    .haraj-float {
+      background: #2b2e83;
+      bottom: 30px;
+    }
+    button {
+      transition: all 0.2s ease;
+    }
+    .action-btn:hover, button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+      cursor: pointer;
+    }
+    .footer-card{
+      display:flex;
+      justify-content: center;
+      text-align: center;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.5); }
+      70% { box-shadow: 0 0 0 14px rgba(255,255,255,0); }
+      100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+    }
+    @media (max-width: 768px) {
+      body {
+        padding: 30px 15px;
+        gap: 15px;
+      }
+      .cards-row {
+        gap: 15px;
+      }
+      .card, .card2, .card3, .card5 {
+        width: 100%;
+      }
+      .card4 {
+        width: 100%;
+        padding: 20px 15px;
+      }
+      .card4 h2 {
+        font-size: 18px;
+      }
+      .float-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+      }
+      .whatsapp-float {
+        bottom: 80px;
+        right: 12px;
+      }
+      .haraj-float {
+        bottom: 20px;
+        right: 12px;
+      }
+    }
+    @media (max-width: 400px) {
+      .card4 {
+        padding: 15px 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- صورة مخفية عشان جوجل ياخد اللوجو -->
+  <img src="https://plain-eeur-prod-public.komododecks.com/202609/05/z3sFMrNTXw7pQCqK2Cmo/image.jpg"
+       alt="متجر أبو نجم - أفضل متجر ألعاب بلايستيشن وحسابات سوني"
+       style="display:none;"
+       width="512" height="512">
+
+  <a href="https://wa.me/966570587323" target="_blank" class="float-btn whatsapp-float">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" style="width: 100%; height: 100%; border-radius: 50%;">
+  </a>
+  <a href="https://haraj.com.sa/users/%D9%85%D8%AA%D8%AC%D8%B1%20%D8%A7%D8%A8%D9%88%20%D9%86%D8%AC%D9%85%201" target="_blank" class="float-btn haraj-float">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/%D8%B4%D8%B9%D8%A7%D8%B1_%D8%AD%D8%B1%D8%A7%D8%AC.png" alt="haraj" style="width: 100%; height: 100%; border-radius: 50%;">
+  </a>
+
+  <div class="cards-row">
+    <div class="card"></div>
+    <div class="card2"></div>
+    <div class="card3"></div>
+    <div class="card5"></div>
+  </div>
+
+  <div class="card4">
+    <h2 style="color: #ffffff; text-align: center;">⚡مرحب فيك في متجرك للطلب</h2>
+    <br>
+    <a href="https://wa.me/966570587323" target="_blank" style="text-decoration: none;">
+      <button class="action-btn" style="background:#25D366; width:100%; padding:12px; margin:5px 0; border:none; border-radius:8px; cursor:pointer; font-size:16px; color:white;">
+        💬 تواصل واتساب
+      </button>
+    </a>
+    <a href="https://haraj.com.sa/users/%D9%85%D8%AA%D8%AC%D8%B1%20%D8%A7%D8%A8%D9%88%20%D9%86%D8%AC%D9%85%201" target="_blank" style="text-decoration: none;">
+      <button class="action-btn" style="background:#4349a4ea; width:100%; padding:12px; margin:5px 0; border:none; border-radius:8px; cursor:pointer; font-size:16px; color:white;">
+        🛒 تواصل على حراج
+      </button>
+    </a>
+    <br>
+    <div class="footer-card" style="color: #ffffff; font-size: 12px;">
+      ® All Rights Reserved ® Khalid Ahmed Abdu
+    </div>
+  </div>
+
+<script>
+class Product {
+  constructor() {
+    this.OwnerName = "";
+    this.productName = "";
+    this.price = 0;
+    this.quantity = 0;
+    this.discounts = 0.0;
+    this.vat = 0.0;
+  }
+  setOwnerName(ownername) {
+    if (ownername && ownername.trim() !== "") {
+      this.OwnerName = ownername;
+      return "Done 1";
+    } else {
+      return "Invalid Customer Name";
+    }
+  }
+  setProductName(name) {
+    if (name && name.trim() !== "") {
+      this.productName = name;
+      return "Done 2";
+    } else {
+      return "Invalid Name";
+    }
+  }
+  setPrice(price) {
+    if (price > 0) {
+      this.price = price;
+      return "Done 3";
+    } else {
+      return "Invalid Price";
+    }
+  }
+  setQuantity(quantity) {
+    if (quantity >= 0) {
+      this.quantity = quantity;
+      return "Done 4";
+    } else {
+      return "Invalid Quantity";
+    }
+  }
+  setDiscounts(discounts) {
+    if (discounts >= 0) {
+      this.discounts = discounts;
+      return "Done 5";
+    } else {
+      return "invalid Discount";
+    }
+  }
+  setVatTax(vat) {
+    this.vat = vat;
+  }
+  getVatTax() {
+    return (this.price * this.quantity) * (this.vat / 100);
+  }
+  getCalculateTotal() {
+    return (this.price * this.quantity) - this.discounts;
+  }
+  getFinalPrice() {
+    return this.getCalculateTotal() + this.getVatTax();
+  }
+}
+let p1 = new Product();
+function setOwnerName() {
+  let value = document.getElementById('Customer Name').value;
+  p1.setOwnerName(value);
+}
+function setProductName() {
+  let value = document.getElementById('name').value;
+  p1.setProductName(value);
+}
+function setPrice() {
+  let value = parseFloat(document.getElementById('price').value);
+  p1.setPrice(value);
+}
+function setQuantity() {
+  let value = parseInt(document.getElementById('quantity').value);
+  p1.setQuantity(value);
+}
+function setDiscounts() {
+  let value = parseInt(document.getElementById('discounts').value);
+  p1.setDiscounts(value);
+}
+function setVatTax() {
+  let value = parseInt(document.getElementById('Vat Tax').value);
+  p1.setVatTax(value);
+}
+function displayProduct() {
+  document.getElementById('result').innerHTML = `
+  <h3> Invoice</h3>
+  <hr>
+  <p><b>Customer Name:</b> ${p1.OwnerName} </p>
+  <p><b>product Name:</b> ${p1.productName} </p>
+  <p><b>price:</b> ${p1.price} </p>
+  <p><b>quantity:</b> ${p1.quantity} </p>
+  <p><b>discount:</b> ${p1.discounts} </p>
+  <p><b>Vat Tax:</b> ${p1.getVatTax()} </p>
+  <hr>
+  <p><b>before Tax:</b> ${p1.getCalculateTotal()} </p>
+  <p><b>Final Price:</b> ${p1.getFinalPrice()} </p>
+  `;
+}
+function downloadInvoice() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  doc.setFontSize(30);
+  doc.text("Invoice", 80, 20);
+  const today = new Date();
+  const formattedDate = today.toLocaleDateString("en-US");
+  doc.setFontSize(15);
+  doc.text(`Date: ${formattedDate}`, 15, 15);
+  doc.setFontSize(20);
+  doc.text(`Customer:  ${p1.OwnerName}`, 20, 40);
+  doc.text(`---------------------------------`, 14, 50);
+  doc.text(`Product: ${p1.productName}`, 20, 60);
+  doc.text(`----------------------`, 14, 70);
+  doc.text(`Price: ${p1.price}`, 20, 80);
+  doc.text(`-------------------------`, 14, 90);
+  doc.text(`Quantity: ${p1.quantity}`, 20, 100);
+  doc.text(`-----------------------------`, 14, 110);
+  doc.text(`Discounts: ${p1.discounts}`, 20, 120);
+  doc.text(`---------------------------------`, 14, 130);
+  doc.text(`Vat Tax: ${p1.getVatTax()}`, 20, 140);
+  doc.text(`--------------------------------------`, 14, 150);
+  doc.text(`SubTotal: ${p1.getCalculateTotal()}`, 20, 160);
+  doc.text(`-----------------------------------------------`, 14, 170);
+  doc.text(`Final Price: ${p1.getFinalPrice()}`, 20, 180);
+  doc.setFontSize(10);
+  doc.text(`Thanks for using {Invoice Gen}: ${"®All Rights Reserved by Khalid Ahmed Abdu®"}`, 10, 280);
+  doc.save("invoice.pdf");
+}
+</script>
+</body>
+</html>
