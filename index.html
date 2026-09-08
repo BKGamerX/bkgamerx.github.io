@@ -1691,7 +1691,7 @@
     });
   });
 
-  // ظهور تدريجي للأقسام عند السكرول
+  // ظهور تدريجي يبدأ من قسم أحدث العروض فقط — الأقسام الأولى (ثقة + ليش متجر أبو نجم) ثابتة
   if ('IntersectionObserver' in window) {
     const revealObs = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -1702,10 +1702,25 @@
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 
-    document.querySelectorAll('.game-card, .value-card, .trust-item, .section-heading, .card, .card2, .card3, .card5').forEach(el => {
-      el.classList.add('reveal-on-scroll');
-      revealObs.observe(el);
-    });
+    const offersEl = document.getElementById('offers');
+    if (offersEl) {
+      const candidates = document.querySelectorAll(
+        '#offers, .cards-row .card, .cards-row .card2, .cards-row .card3, .cards-row .card5, .game-card, .game-tag, .faq-item, #latest-games, .games-tags-wrap + .section-heading, #contact, #seo-about-heading'
+      );
+      // كل section-heading وكارت من بعد #offers
+      document.querySelectorAll('.section-heading, .card, .card2, .card3, .card5, .game-card, .game-tag, .faq-item, .cards-row').forEach(el => {
+        // هل العنصر هو #offers أو بعده في الصفحة؟
+        const pos = offersEl.compareDocumentPosition(el);
+        const isOffersOrAfter =
+          el === offersEl ||
+          offersEl.contains(el) ||
+          (pos & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
+        if (isOffersOrAfter) {
+          el.classList.add('reveal-on-scroll');
+          revealObs.observe(el);
+        }
+      });
+    }
   }
 </script>
 </body>
