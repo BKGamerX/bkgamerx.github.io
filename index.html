@@ -1254,7 +1254,7 @@
     <div class="hero-cta">
       <a href="#offers" class="btn btn-gold">تصفح العروض</a>
       <a href="#contact" class="btn btn-outline">تواصل معنا</a>
-      <button type="button" id="installAppBtn" class="btn btn-gold" style="display:none;">
+      <button type="button" id="installAppBtn" class="btn btn-gold">
         📲 تحميل التطبيق
       </button>
     </div>
@@ -1735,39 +1735,42 @@
     });
   }
 
-  // Capture the install prompt
+  // Capture the install prompt (when browser is ready to install)
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    if (installBtn) {
-      installBtn.style.display = 'inline-flex';
-    }
   });
 
   // When user clicks the install button
   if (installBtn) {
     installBtn.addEventListener('click', async () => {
-      if (!deferredPrompt) {
-        // Fallback for iOS or browsers that don't support beforeinstallprompt
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-        if (isIOS) {
-          alert('لتثبيت التطبيق على آيفون:\n1. اضغط زر المشاركة (Share)\n2. اختر "إضافة إلى الشاشة الرئيسية"');
-        } else {
-          alert('التطبيق جاهز للتثبيت. لو الزر مش ظاهر، افتح الموقع من جوجل كروم على الموبايل.');
+      if (deferredPrompt) {
+        // Show the native install prompt
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log('User choice:', outcome);
+        deferredPrompt = null;
+        if (outcome === 'accepted') {
+          installBtn.style.display = 'none';
         }
-        return;
+      } else {
+        // Fallback: already installed or browser doesn't support auto prompt
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        if (isStandalone) {
+          alert('التطبيق مثبت بالفعل على جهازك ✓');
+        } else {
+          const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+          if (isIOS) {
+            alert('لتثبيت التطبيق على آيفون:\n\n1. اضغط زر المشاركة ⎋ في الأسفل\n2. اختر "إضافة إلى الشاشة الرئيسية"\n3. اضغط "إضافة"');
+          } else {
+            alert('اضغط على قائمة المتصفح (⋮) ثم اختر "تثبيت التطبيق" أو "إضافة إلى الشاشة الرئيسية"');
+          }
+        }
       }
-
-      // Show the native install prompt
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      console.log('User choice:', outcome);
-      deferredPrompt = null;
-      installBtn.style.display = 'none';
     });
   }
 
-  // Hide button if already installed
+  // Hide button after successful install
   window.addEventListener('appinstalled', () => {
     deferredPrompt = null;
     if (installBtn) installBtn.style.display = 'none';
