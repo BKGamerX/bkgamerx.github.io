@@ -613,42 +613,68 @@
       justify-content: space-between;
       gap: 10px;
       padding: 10px 16px;
-      background: rgba(4,4,4,0.9);
+      background: rgba(4,4,4,0.92);
       backdrop-filter: blur(20px);
       border-bottom: 1px solid rgba(212,175,55,0.2);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     body.app-mode .app-topbar { display: flex; }
+
+    body.app-mode .app-topbar.topbar-hidden {
+      transform: translateY(-110%);
+    }
 
     .app-topbar .app-topbar-brand {
       display: flex;
       align-items: center;
       gap: 10px;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .app-topbar img {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
+    .app-topbar .app-topbar-brand img {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
       object-fit: cover;
-      box-shadow: 0 0 0 2px var(--gold), 0 0 14px rgba(212,175,55,0.35);
+      box-shadow:
+        0 0 0 1.5px rgba(212,175,55,0.7),
+        0 0 0 4px rgba(212,175,55,0.12),
+        0 4px 14px rgba(0,0,0,0.45);
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .app-topbar span {
+    .app-topbar .app-topbar-brand.spinning img {
+      animation: brand-spin 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes brand-spin {
+      0%   { transform: rotate(0deg) scale(1); }
+      40%  { transform: rotate(360deg) scale(1.12); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
+
+    .app-topbar .app-topbar-brand span {
       font-family: 'Cairo', sans-serif;
       font-weight: 900;
       font-size: 15px;
       color: var(--gold-bright);
+      letter-spacing: 0.2px;
     }
 
     .app-topbar .app-status {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 700;
       padding: 5px 11px;
       border-radius: 999px;
+      max-width: 58%;
       transition: color 0.25s ease, background 0.25s ease, border-color 0.25s ease;
     }
 
@@ -660,9 +686,9 @@
     }
 
     .app-topbar .app-status.online {
-      color: #7dffa8;
-      background: rgba(37,211,102,0.12);
-      border: 1px solid rgba(37,211,102,0.35);
+      color: #9dffc0;
+      background: rgba(37,211,102,0.1);
+      border: 1px solid rgba(37,211,102,0.32);
     }
 
     .app-topbar .app-status.online .net-dot {
@@ -1884,11 +1910,11 @@
 
   <!-- ===== App Topbar (only in installed app) ===== -->
   <div class="app-topbar" id="appTopbar">
-    <div class="app-topbar-brand">
+    <button type="button" class="app-topbar-brand" id="appBrandBtn" aria-label="متجر أبو نجم">
       <img src="https://plain-eeur-prod-public.komododecks.com/202609/05/z3sFMrNTXw7pQCqK2Cmo/image.jpg" alt="">
       <span>متجر أبو نجم</span>
-    </div>
-    <div class="app-status online" id="netStatus"><span class="net-dot"></span><span class="net-text">متصل</span></div>
+    </button>
+    <div class="app-status online" id="netStatus"><span class="net-dot"></span><span class="net-text">الشبكة مستقرة</span></div>
   </div>
 
   <!-- ===== Navbar ===== -->
@@ -2389,20 +2415,73 @@
     const splash = document.getElementById('app-splash');
     if (!splash) return;
 
-    const hideSplash = () => {
+    function hideSplash() {
       splash.classList.add('hide');
-      setTimeout(() => {
-        if (splash.parentNode) splash.parentNode.removeChild(splash);
-      }, 600);
-    };
+    }
+
+    function showSplash(duration) {
+      splash.classList.remove('hide');
+      // restart logo animation
+      const logo = splash.querySelector('.splash-logo');
+      if (logo) {
+        logo.style.animation = 'none';
+        void logo.offsetWidth;
+        logo.style.animation = '';
+      }
+      clearTimeout(showSplash._t);
+      showSplash._t = setTimeout(hideSplash, duration || 2000);
+    }
+
+    window.__replaySplash = showSplash;
 
     const delay = isStandalone ? 2200 : 1400;
-
     if (document.readyState === 'complete') {
       setTimeout(hideSplash, delay);
     } else {
       window.addEventListener('load', () => setTimeout(hideSplash, delay));
     }
+  })();
+
+  // ===== App topbar: hide on scroll down / show on scroll up =====
+  (function () {
+    if (!isStandalone) return;
+    const topbar = document.getElementById('appTopbar');
+    if (!topbar) return;
+
+    let lastY = 0;
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const y = window.pageYOffset || document.documentElement.scrollTop;
+        if (y > lastY && y > 60) {
+          topbar.classList.add('topbar-hidden');
+        } else {
+          topbar.classList.remove('topbar-hidden');
+        }
+        lastY = y <= 0 ? 0 : y;
+        ticking = false;
+      });
+    }, { passive: true });
+  })();
+
+  // ===== Brand tap: spin star + replay splash =====
+  (function () {
+    const btn = document.getElementById('appBrandBtn');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      btn.classList.remove('spinning');
+      void btn.offsetWidth;
+      btn.classList.add('spinning');
+      setTimeout(() => btn.classList.remove('spinning'), 950);
+
+      if (typeof window.__replaySplash === 'function') {
+        window.__replaySplash(2000);
+      }
+      // scroll to top after splash starts
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   })();
 
   // ===== App Tab Bar Navigation =====
@@ -2535,7 +2614,7 @@
     function setOnline(ok) {
       el.classList.toggle('online', ok);
       el.classList.toggle('offline', !ok);
-      if (text) text.textContent = ok ? 'متصل' : 'تأكد من جودة شبكتك';
+      if (text) text.textContent = ok ? 'الشبكة مستقرة' : 'تأكد من جودة شبكتك';
     }
 
     setOnline(navigator.onLine);
