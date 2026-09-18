@@ -259,7 +259,7 @@
     html { scroll-behavior: smooth; }
 
     /* تفاعل عام */
-    a, button, .game-card, .game-tag, .trust-item, .value-card, .faq-item, .card, .card2, .card3, .card5 {
+    a, button, .game-card, .game-tag, .trust-item, .value-card, .faq-item, .offer-card {
       -webkit-tap-highlight-color: transparent;
     }
 
@@ -516,24 +516,6 @@
       box-shadow: 0 6px 18px rgba(37,211,102,0.35);
     }
 
-    body.app-mode .cards-row {
-      flex-direction: column;
-      gap: 10px;
-      align-items: stretch;
-    }
-
-    body.app-mode .card,
-    body.app-mode .card2,
-    body.app-mode .card3,
-    body.app-mode .card5 {
-      width: 100%;
-      max-width: 100%;
-      aspect-ratio: 16 / 9;
-      border-radius: 16px;
-      border: 1px solid rgba(212,175,55,0.2);
-      box-shadow: 0 12px 32px rgba(0,0,0,0.5);
-    }
-
     body.app-mode .faq-item {
       background: linear-gradient(145deg, #171717, #0b0b0b);
       border-color: rgba(212,175,55,0.2);
@@ -660,13 +642,51 @@
     }
 
     .app-topbar .app-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       font-size: 11px;
       font-weight: 700;
+      padding: 5px 11px;
+      border-radius: 999px;
+      transition: color 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+    }
+
+    .app-topbar .app-status .net-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .app-topbar .app-status.online {
       color: #7dffa8;
       background: rgba(37,211,102,0.12);
-      border: 1px solid rgba(37,211,102,0.3);
-      padding: 4px 10px;
-      border-radius: 999px;
+      border: 1px solid rgba(37,211,102,0.35);
+    }
+
+    .app-topbar .app-status.online .net-dot {
+      background: #25D366;
+      box-shadow: 0 0 0 0 rgba(37,211,102,0.5);
+      animation: net-pulse 1.8s ease-out infinite;
+    }
+
+    .app-topbar .app-status.offline {
+      color: #ffb4b4;
+      background: rgba(220,60,60,0.14);
+      border: 1px solid rgba(220,60,60,0.4);
+    }
+
+    .app-topbar .app-status.offline .net-dot {
+      background: #e74c3c;
+      box-shadow: 0 0 8px rgba(231,76,60,0.5);
+      animation: none;
+    }
+
+    @keyframes net-pulse {
+      0% { box-shadow: 0 0 0 0 rgba(37,211,102,0.55); }
+      70% { box-shadow: 0 0 0 7px rgba(37,211,102,0); }
+      100% { box-shadow: 0 0 0 0 rgba(37,211,102,0); }
     }
 
     body.app-mode main > * {
@@ -1176,46 +1196,95 @@
       box-shadow: 0 10px 24px rgba(37,211,102,0.4);
     }
 
-    .cards-row{
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 24px;
+    /* Offers stack — website vertical / app smart folders */
+    .offers-stack {
       width: 100%;
+      max-width: 820px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      align-items: center;
     }
 
-    .card, .card2, .card3, .card5 {
-      background-color: #000;
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-position: center;
-      border-radius: 22px;
-      width: 800px;
+    .offer-card {
+      width: 100%;
       max-width: 96%;
-      aspect-ratio: 1536 / 1024;
-      border: 1px solid var(--panel-line);
-      box-shadow: 0 16px 48px rgba(0,0,0,0.55), 0 0 0 1px rgba(212,175,55,0.08);
-      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(212,175,55,0.28);
+      box-shadow: 0 14px 40px rgba(0,0,0,0.5), 0 0 20px rgba(212,175,55,0.06);
+      background: #0a0a0a;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease, opacity 0.35s ease;
+      cursor: pointer;
     }
 
-    .card:hover, .card2:hover, .card3:hover, .card5:hover {
-      transform: translateY(-6px) scale(1.01);
-      border-color: var(--panel-line-strong);
-      box-shadow: 0 24px 60px rgba(0,0,0,0.65), 0 0 40px rgba(212,175,55,0.15);
+    .offer-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      object-position: center;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.35s ease;
     }
 
-    .card{
-      background-image: url("https://plain-eeur-prod-public.komododecks.com/202609/05/VLAFaUMSQexnzZPrPcVq/image.jpg");
+    /* Website: glow + closer on hover / scroll focus */
+    body:not(.app-mode) .offer-card:hover,
+    body:not(.app-mode) .offer-card.is-focus {
+      transform: translateY(-8px) scale(1.03);
+      border-color: rgba(212,175,55,0.55);
+      box-shadow:
+        0 22px 50px rgba(0,0,0,0.55),
+        0 0 40px rgba(212,175,55,0.28),
+        0 0 80px rgba(212,175,55,0.1);
     }
-    .card2{
-      background-image: url("https://plain-eeur-prod-public.komododecks.com/202609/04/rx10qH7lPcSFPOXWI0hg/image.jpg");
+
+    body:not(.app-mode) .offer-card:hover img,
+    body:not(.app-mode) .offer-card.is-focus img {
+      transform: scale(1.04);
+      filter: brightness(1.08) saturate(1.1);
     }
-    .card3{
-      background-image: url("https://plain-eeur-prod-public.komododecks.com/202609/04/JVvcHjeZTNQYzqaZ0yj4/image.jpg");
+
+    .offers-dots,
+    .offers-hint { display: none !important; }
+
+    /* App: smart folder stack (kept as-is, light focus only) */
+    body.app-mode .offers-stack {
+      max-width: 100%;
+      gap: 12px;
+      padding: 2px 0 6px;
     }
-    .card5{
-      background-image: url("https://plain-eeur-prod-public.komododecks.com/202609/05/SpLWug0EL1pn0qRzfhz5/image.jpg");
+
+    body.app-mode .offer-card {
+      max-width: 100%;
+      border-radius: 16px;
+      border-color: rgba(212,175,55,0.32);
+      box-shadow:
+        0 10px 28px rgba(0,0,0,0.55),
+        0 0 0 1px rgba(212,175,55,0.12);
+      transform-origin: center top;
+      cursor: default;
+    }
+
+    body.app-mode .offer-card img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      background: #0a0a0a;
+    }
+
+    body.app-mode .offer-card.is-peek {
+      transform: scale(0.97);
+      opacity: 0.88;
+    }
+
+    body.app-mode .offer-card.is-focus {
+      transform: scale(1);
+      opacity: 1;
+      box-shadow:
+        0 16px 40px rgba(0,0,0,0.6),
+        0 0 28px rgba(212,175,55,0.12);
+      border-color: rgba(212,175,55,0.45);
     }
 
     .card4{
@@ -1781,8 +1850,8 @@
 
     @media (max-width: 768px) {
       main { padding: 10px 15px 60px; gap: 15px; }
-      .card, .card2, .card3, .card5 { width: 100%; }
-      .card4 { width: 100%; padding: 3px; }
+      .offers-stack { max-width: 100%; }
+      .card4 { width: 100%; }
       .card4 h2 { font-size: 18px; }
       .float-btn { width: 45px; height: 45px; font-size: 20px; }
       .whatsapp-float { bottom: 80px; right: 12px; }
@@ -1819,7 +1888,7 @@
       <img src="https://plain-eeur-prod-public.komododecks.com/202609/05/z3sFMrNTXw7pQCqK2Cmo/image.jpg" alt="">
       <span>متجر أبو نجم</span>
     </div>
-    <div class="app-status">● متصل</div>
+    <div class="app-status online" id="netStatus"><span class="net-dot"></span><span class="net-text">متصل</span></div>
   </div>
 
   <!-- ===== Navbar ===== -->
@@ -1919,11 +1988,19 @@
       <div class="rule"></div>
     </div>
 
-    <div class="cards-row">
-      <div class="card"></div>
-      <div class="card2"></div>
-      <div class="card3"></div>
-      <div class="card5"></div>
+    <div class="offers-stack" id="offersStack">
+      <div class="offer-card">
+        <img src="https://plain-eeur-prod-public.komododecks.com/202609/05/VLAFaUMSQexnzZPrPcVq/image.jpg" alt="عرض 1" loading="lazy">
+      </div>
+      <div class="offer-card">
+        <img src="https://plain-eeur-prod-public.komododecks.com/202609/04/rx10qH7lPcSFPOXWI0hg/image.jpg" alt="عرض 2" loading="lazy">
+      </div>
+      <div class="offer-card">
+        <img src="https://plain-eeur-prod-public.komododecks.com/202609/04/JVvcHjeZTNQYzqaZ0yj4/image.jpg" alt="عرض 3" loading="lazy">
+      </div>
+      <div class="offer-card">
+        <img src="https://plain-eeur-prod-public.komododecks.com/202609/05/SpLWug0EL1pn0qRzfhz5/image.jpg" alt="عرض 4" loading="lazy">
+      </div>
     </div>
 
     <div class="section-heading" id="latest-games">
@@ -2448,6 +2525,52 @@
       }
     });
   });
+
+  // Network status (app topbar)
+  (function () {
+    const el = document.getElementById('netStatus');
+    if (!el) return;
+    const text = el.querySelector('.net-text');
+
+    function setOnline(ok) {
+      el.classList.toggle('online', ok);
+      el.classList.toggle('offline', !ok);
+      if (text) text.textContent = ok ? 'متصل' : 'تأكد من جودة شبكتك';
+    }
+
+    setOnline(navigator.onLine);
+    window.addEventListener('online', () => setOnline(true));
+    window.addEventListener('offline', () => setOnline(false));
+  })();
+
+  // Offers focus on scroll (glow on website + folder focus in app)
+  (function () {
+    const cards = document.querySelectorAll('.offer-card');
+    if (!cards.length || !('IntersectionObserver' in window)) return;
+    const isApp = document.body.classList.contains('app-mode');
+
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+          cards.forEach(c => {
+            c.classList.remove('is-focus');
+            if (isApp) c.classList.add('is-peek');
+          });
+          entry.target.classList.remove('is-peek');
+          entry.target.classList.add('is-focus');
+        }
+      });
+    }, { threshold: [0.5, 0.7] });
+
+    cards.forEach(c => {
+      if (isApp) c.classList.add('is-peek');
+      obs.observe(c);
+    });
+    if (cards[0]) {
+      cards[0].classList.remove('is-peek');
+      cards[0].classList.add('is-focus');
+    }
+  })();
 
   // Support accordion (collapsed by default)
   (function () {
