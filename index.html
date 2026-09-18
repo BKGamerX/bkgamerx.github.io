@@ -263,23 +263,12 @@
       color: #fff;
     }
 
-    .reveal-on-scroll {
-      opacity: 0;
-      transform: translateY(22px);
-      transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
+    /* الأقسام ثابتة ظاهرة — بدون ظهور تدريجي عند النزول */
+    .reveal-on-scroll,
     .reveal-on-scroll.is-visible {
       opacity: 1;
-      transform: translateY(0);
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .reveal-on-scroll {
-        opacity: 1;
-        transform: none;
-        transition: none;
-      }
+      transform: none;
+      transition: none;
     }
 
     body {
@@ -1690,38 +1679,6 @@
       card.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
     });
   });
-
-  // ظهور تدريجي يبدأ من قسم أحدث العروض فقط — الأقسام الأولى (ثقة + ليش متجر أبو نجم) ثابتة
-  if ('IntersectionObserver' in window) {
-    const revealObs = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          revealObs.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-
-    const offersEl = document.getElementById('offers');
-    if (offersEl) {
-      const candidates = document.querySelectorAll(
-        '#offers, .cards-row .card, .cards-row .card2, .cards-row .card3, .cards-row .card5, .game-card, .game-tag, .faq-item, #latest-games, .games-tags-wrap + .section-heading, #contact, #seo-about-heading'
-      );
-      // كل section-heading وكارت من بعد #offers
-      document.querySelectorAll('.section-heading, .card, .card2, .card3, .card5, .game-card, .game-tag, .faq-item, .cards-row').forEach(el => {
-        // هل العنصر هو #offers أو بعده في الصفحة؟
-        const pos = offersEl.compareDocumentPosition(el);
-        const isOffersOrAfter =
-          el === offersEl ||
-          offersEl.contains(el) ||
-          (pos & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
-        if (isOffersOrAfter) {
-          el.classList.add('reveal-on-scroll');
-          revealObs.observe(el);
-        }
-      });
-    }
-  }
 </script>
 </body>
 </html>
