@@ -11,6 +11,11 @@
   "icons": [
     {
       "src": "https://plain-eeur-prod-public.komododecks.com/202609/05/z3sFMrNTXw7pQCqK2Cmo/image.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "https://plain-eeur-prod-public.komododecks.com/202609/05/z3sFMrNTXw7pQCqK2Cmo/image.jpg",
       "sizes": "512x512",
       "type": "image/jpeg"
     }
