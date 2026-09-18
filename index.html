@@ -408,19 +408,127 @@
     /* ===== App Mode (standalone PWA) ===== */
     body.app-mode {
       padding-bottom: 78px;
+      background-image: none !important;
+      background-color: #050505;
     }
 
-    body.app-mode .navbar {
-      display: none;
-    }
-
-    body.app-mode .float-btn {
-      display: none;
+    body.app-mode .navbar,
+    body.app-mode .float-btn,
+    body.app-mode #installAppBtn,
+    body.app-mode #navInstallBtn,
+    body.app-mode .trust-strip,
+    body.app-mode .games-tags-wrap,
+    body.app-mode [aria-labelledby="seo-about-heading"],
+    body.app-mode .footer-bottom,
+    body.app-mode .site-footer .footer-col:first-child,
+    body.app-mode .hero-subtitle,
+    body.app-mode .hero-cta .btn-outline {
+      display: none !important;
     }
 
     body.app-mode .hero {
-      padding-top: 50px;
-      padding-bottom: 40px;
+      padding: 24px 16px 16px;
+      min-height: auto;
+    }
+
+    body.app-mode .hero-logo {
+      width: 72px;
+      height: 72px;
+    }
+
+    body.app-mode .hero-title {
+      font-size: 26px !important;
+      margin-top: 12px;
+    }
+
+    body.app-mode .hero-cta {
+      margin-top: 16px;
+    }
+
+    body.app-mode .hero-cta .btn-gold {
+      padding: 14px 28px;
+      font-size: 15px;
+      border-radius: 14px;
+    }
+
+    body.app-mode main {
+      padding: 0 12px 28px;
+      gap: 10px;
+    }
+
+    body.app-mode .section-heading {
+      margin: 16px 0 14px;
+    }
+
+    body.app-mode .section-heading h2 {
+      font-size: 19px;
+    }
+
+    body.app-mode .games-grid {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    body.app-mode .game-card {
+      border-radius: 16px;
+      padding: 16px;
+      gap: 10px;
+      background: linear-gradient(165deg, #141414 0%, #0a0a0a 100%);
+      border-color: rgba(212,175,55,0.18);
+    }
+
+    body.app-mode .game-card h3 {
+      font-size: 16px;
+    }
+
+    body.app-mode .cards-row {
+      flex-direction: column;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    body.app-mode .card,
+    body.app-mode .card2,
+    body.app-mode .card3,
+    body.app-mode .card5 {
+      width: 100%;
+      max-width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 16px;
+    }
+
+    body.app-mode .values-grid {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    body.app-mode .value-card {
+      padding: 16px;
+      border-radius: 14px;
+      background: linear-gradient(165deg, #141414 0%, #0a0a0a 100%);
+      border-color: rgba(212,175,55,0.18);
+    }
+
+    body.app-mode .faq-item {
+      background: linear-gradient(165deg, #141414 0%, #0a0a0a 100%);
+      border-color: rgba(212,175,55,0.18);
+    }
+
+    body.app-mode .faq-wrap {
+      gap: 8px;
+    }
+
+    body.app-mode .card4 {
+      width: 100%;
+      max-width: 100%;
+      border-radius: 18px;
+    }
+
+    body.app-mode .site-footer {
+      padding: 14px 12px 18px;
+      border-top: 1px solid rgba(212,175,55,0.15);
+      justify-content: center;
+      gap: 20px;
     }
 
     /* Bottom Tab Bar */
