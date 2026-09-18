@@ -298,6 +298,113 @@
 
     a { color: inherit; }
 
+    /* ===== App Splash Screen ===== */
+    #app-splash {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      background: #030303;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      transition: opacity 0.55s ease, visibility 0.55s ease;
+    }
+
+    #app-splash.hide {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    #app-splash .splash-glow {
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(212,175,55,0.28) 0%, transparent 70%);
+      filter: blur(8px);
+      animation: splash-pulse 2s ease-in-out infinite;
+    }
+
+    #app-splash .splash-logo {
+      position: relative;
+      z-index: 1;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow:
+        0 0 0 3px rgba(212,175,55,0.55),
+        0 0 40px rgba(212,175,55,0.35),
+        0 20px 50px rgba(0,0,0,0.6);
+      animation: splash-spin 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+
+    #app-splash .splash-name {
+      position: relative;
+      z-index: 1;
+      font-family: 'Cairo', sans-serif;
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--gold-bright);
+      letter-spacing: 0.5px;
+      text-shadow: 0 0 24px rgba(212,175,55,0.4);
+      opacity: 0;
+      animation: splash-fade-up 0.6s ease 0.3s forwards;
+    }
+
+    #app-splash .splash-bar {
+      position: relative;
+      z-index: 1;
+      width: 120px;
+      height: 3px;
+      background: rgba(212,175,55,0.15);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    #app-splash .splash-bar span {
+      display: block;
+      height: 100%;
+      width: 40%;
+      background: linear-gradient(90deg, var(--gold), var(--gold-bright), var(--gold));
+      border-radius: 4px;
+      animation: splash-bar 1.1s ease-in-out infinite;
+    }
+
+    @keyframes splash-spin {
+      0%   { transform: rotate(0deg) scale(1); }
+      40%  { transform: rotate(360deg) scale(1.08); }
+      70%  { transform: rotate(360deg) scale(1.02); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
+
+    @keyframes splash-pulse {
+      0%, 100% { transform: scale(1); opacity: 0.85; }
+      50%      { transform: scale(1.15); opacity: 1; }
+    }
+
+    @keyframes splash-fade-up {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes splash-bar {
+      0%   { transform: translateX(-120%); }
+      100% { transform: translateX(320%); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #app-splash .splash-logo,
+      #app-splash .splash-glow,
+      #app-splash .splash-bar span {
+        animation: none !important;
+      }
+    }
+
     /* ===== Navbar ===== */
     .navbar {
       position: sticky;
@@ -1214,6 +1321,14 @@
 </head>
 <body>
 
+  <!-- ===== App Splash (shows when opening the installed app) ===== -->
+  <div id="app-splash">
+    <div class="splash-glow"></div>
+    <img class="splash-logo" src="https://plain-eeur-prod-public.komododecks.com/202609/05/z3sFMrNTXw7pQCqK2Cmo/image.jpg" alt="متجر أبو نجم">
+    <div class="splash-name">متجر أبو نجم</div>
+    <div class="splash-bar"><span></span></div>
+  </div>
+
   <img src="https://plain-eeur-prod-public.komododecks.com/202609/05/z3sFMrNTXw7pQCqK2Cmo/image.jpg"
        alt="متجر أبو نجم - أفضل متجر ألعاب بلايستيشن وحسابات سوني"
        style="display:none;" width="512" height="512">
@@ -1629,6 +1744,29 @@
   </a>
 
 <script>
+  // ===== Splash Screen =====
+  (function () {
+    const splash = document.getElementById('app-splash');
+    if (!splash) return;
+
+    const hideSplash = () => {
+      splash.classList.add('hide');
+      setTimeout(() => {
+        if (splash.parentNode) splash.parentNode.removeChild(splash);
+      }, 600);
+    };
+
+    // Show splash a bit longer when launched as installed app
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    const delay = isStandalone ? 2200 : 1400;
+
+    if (document.readyState === 'complete') {
+      setTimeout(hideSplash, delay);
+    } else {
+      window.addEventListener('load', () => setTimeout(hideSplash, delay));
+    }
+  })();
+
   // Mobile nav toggle
   const navbar = document.getElementById('navbar');
   const navToggle = document.getElementById('navToggle');
@@ -1748,37 +1886,18 @@
     console.log('beforeinstallprompt captured');
   });
 
-  // Shared install function
+  // Shared install function - no alerts, install directly when possible
   async function triggerInstall() {
-    // Already running as installed app?
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-    if (isStandalone) {
-      alert('التطبيق مثبت بالفعل على جهازك ✓');
-      return;
-    }
+    if (!deferredPrompt) return; // silent if not ready
 
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      console.log('User choice:', outcome);
-      if (outcome === 'accepted') {
-        deferredPrompt = null;
-        if (installBtn) installBtn.style.display = 'none';
-        if (navInstallBtn) navInstallBtn.style.display = 'none';
-      }
-      return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log('User choice:', outcome);
+    if (outcome === 'accepted') {
+      deferredPrompt = null;
+      if (installBtn) installBtn.style.display = 'none';
+      if (navInstallBtn) navInstallBtn.style.display = 'none';
     }
-
-    // iOS fallback
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    if (isIOS) {
-      alert('لتثبيت التطبيق على آيفون:\n\n1. اضغط زر المشاركة ⎋ في الأسفل\n2. اختر "إضافة إلى الشاشة الرئيسية"\n3. اضغط "إضافة"');
-      return;
-    }
-
-    // Android / Chrome / Edge fallback - try to guide better
-    // Some browsers show install icon in address bar
-    alert('ثبّت التطبيق بسهولة:\n\n• لو شايف أيقونة تثبيت في شريط العنوان (جنب اللينك) اضغط عليها\n• أو افتح قائمة المتصفح (⋮) واختر "تثبيت التطبيق" أو "إضافة إلى الشاشة الرئيسية"');
   }
 
   if (installBtn) {
