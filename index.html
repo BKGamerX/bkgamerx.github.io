@@ -7,6 +7,11 @@
 
   <link rel="icon" type="image/jpeg" sizes="512x512" href="https://plain-eeur-prod-public.komododecks.com/202609/05/z3sFMrNTXw7pQCqK2Cmo/image.jpg">
   <link rel="apple-touch-icon" href="https://plain-eeur-prod-public.komododecks.com/202609/05/z3sFMrNTXw7pQCqK2Cmo/image.jpg">
+  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="متجر أبو نجم">
 
   <title>متجر أبو نجم | شراء ألعاب PS5 وPS4 وحسابات سوني في السعودية | تسليم فوري</title>
   <meta name="description" content="متجر أبو نجم — أفضل متجر سعودي لشراء ألعاب بلايستيشن PS5 وPS4 وحسابات سوني بأسعار منافسة. Spider-Man، God of War، FC 25، Call of Duty، Black Myth Wukong والمزيد. تسليم فوري، حسابات أصلية مضمونة 100%، خدمة في الرياض وجدة والدمام ومكة والمدينة والقصيم. تواصل واتساب الآن.">
@@ -307,6 +312,11 @@
       -webkit-backdrop-filter: blur(20px) saturate(1.4);
       border-bottom: 1px solid var(--panel-line-strong);
       box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .navbar.nav-hidden {
+      transform: translateY(-100%);
     }
 
     .navbar-brand {
@@ -591,6 +601,7 @@
       .hero-title { animation: none !important; opacity: 1; transform: none; background-position: 0 0; }
       .hero-glow { animation: none; }
       html { scroll-behavior: auto; }
+      .navbar { transition: none; }
     }
 
     /* ===== Section heading ===== */
@@ -1243,6 +1254,9 @@
     <div class="hero-cta">
       <a href="#offers" class="btn btn-gold">تصفح العروض</a>
       <a href="#contact" class="btn btn-outline">تواصل معنا</a>
+      <button type="button" id="installAppBtn" class="btn btn-gold" style="display:none;">
+        📲 تحميل التطبيق
+      </button>
     </div>
   </section>
 
@@ -1640,7 +1654,33 @@
         navToggle.setAttribute('aria-expanded', 'false');
       }
     });
-  });  // FAQ accordion
+  });
+
+  // Hide navbar on scroll down, show on scroll up
+  let lastScrollY = 0;
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        const currentScrollY = window.pageYOffset || document.documentElement.scrollTop;
+        if (currentScrollY > lastScrollY && currentScrollY > 80) {
+          // scrolling down
+          navbar.classList.add('nav-hidden');
+          // also close mobile menu if open
+          navbar.classList.remove('open');
+          if (navToggle) navToggle.setAttribute('aria-expanded', 'false');
+        } else {
+          // scrolling up
+          navbar.classList.remove('nav-hidden');
+        }
+        lastScrollY = currentScrollY <= 0 ? 0 : currentScrollY;
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+
+  // FAQ accordion
   document.querySelectorAll('.faq-item').forEach(item => {
     const question = item.querySelector('.faq-question');
     const answer = item.querySelector('.faq-answer');
@@ -1655,7 +1695,9 @@
         answer.style.maxHeight = answer.scrollHeight + 'px';
       }
     });
-  });  // Reveal contact card when it scrolls into view
+  });
+
+  // Reveal contact card when it scrolls into view
   const contactCard = document.querySelector('.card4');
   if (contactCard && 'IntersectionObserver' in window) {
     const observer = new IntersectionObserver((entries) => {
@@ -1678,6 +1720,58 @@
       card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
       card.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
     });
+  });
+
+  // ===== PWA Install Button =====
+  let deferredPrompt = null;
+  const installBtn = document.getElementById('installAppBtn');
+
+  // Register Service Worker
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('Service Worker registered:', reg.scope))
+        .catch(err => console.log('SW registration failed:', err));
+    });
+  }
+
+  // Capture the install prompt
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    if (installBtn) {
+      installBtn.style.display = 'inline-flex';
+    }
+  });
+
+  // When user clicks the install button
+  if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) {
+        // Fallback for iOS or browsers that don't support beforeinstallprompt
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        if (isIOS) {
+          alert('لتثبيت التطبيق على آيفون:\n1. اضغط زر المشاركة (Share)\n2. اختر "إضافة إلى الشاشة الرئيسية"');
+        } else {
+          alert('التطبيق جاهز للتثبيت. لو الزر مش ظاهر، افتح الموقع من جوجل كروم على الموبايل.');
+        }
+        return;
+      }
+
+      // Show the native install prompt
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log('User choice:', outcome);
+      deferredPrompt = null;
+      installBtn.style.display = 'none';
+    });
+  }
+
+  // Hide button if already installed
+  window.addEventListener('appinstalled', () => {
+    deferredPrompt = null;
+    if (installBtn) installBtn.style.display = 'none';
+    console.log('PWA was installed');
   });
 </script>
 </body>
