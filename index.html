@@ -1241,6 +1241,7 @@
         </div>
       </li>
       <li><a href="#offers" class="nav-link">العروض</a></li>
+      <li><a href="#" class="nav-link" id="navInstallBtn">تثبيت التطبيق</a></li>
       <li><a href="#contact" class="nav-link">تواصل معنا</a></li>
     </ul>
   </nav>
@@ -1253,10 +1254,10 @@
     <p class="hero-subtitle">وجهتك الأولى لأقوى وأشهر ألعاب بلايستيشن وحسابات سوني، بأسعار منافسة وتسليم فوري.</p>
     <div class="hero-cta">
       <a href="#offers" class="btn btn-gold">تصفح العروض</a>
-      <a href="#contact" class="btn btn-outline">تواصل معنا</a>
-      <button type="button" id="installAppBtn" class="btn btn-gold">
+      <button type="button" id="installAppBtn" class="btn btn-gold" style="padding: 17px 34px; font-size: 16.5px;">
         📲 تحميل التطبيق
       </button>
+      <a href="#contact" class="btn btn-outline">تواصل معنا</a>
     </div>
   </section>
 
@@ -1725,55 +1726,79 @@
   // ===== PWA Install Button =====
   let deferredPrompt = null;
   const installBtn = document.getElementById('installAppBtn');
+  const navInstallBtn = document.getElementById('navInstallBtn');
 
-  // Register Service Worker
+  // Register Service Worker (try both paths)
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
+      navigator.serviceWorker.register('./sw.js')
         .then(reg => console.log('Service Worker registered:', reg.scope))
-        .catch(err => console.log('SW registration failed:', err));
+        .catch(() => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('Service Worker registered (root):', reg.scope))
+            .catch(err => console.log('SW registration failed:', err));
+        });
     });
   }
 
-  // Capture the install prompt (when browser is ready to install)
+  // Capture the install prompt
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
+    console.log('beforeinstallprompt captured');
   });
 
-  // When user clicks the install button
-  if (installBtn) {
-    installBtn.addEventListener('click', async () => {
-      if (deferredPrompt) {
-        // Show the native install prompt
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        console.log('User choice:', outcome);
+  // Shared install function
+  async function triggerInstall() {
+    // Already running as installed app?
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    if (isStandalone) {
+      alert('التطبيق مثبت بالفعل على جهازك ✓');
+      return;
+    }
+
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log('User choice:', outcome);
+      if (outcome === 'accepted') {
         deferredPrompt = null;
-        if (outcome === 'accepted') {
-          installBtn.style.display = 'none';
-        }
-      } else {
-        // Fallback: already installed or browser doesn't support auto prompt
-        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-        if (isStandalone) {
-          alert('التطبيق مثبت بالفعل على جهازك ✓');
-        } else {
-          const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-          if (isIOS) {
-            alert('لتثبيت التطبيق على آيفون:\n\n1. اضغط زر المشاركة ⎋ في الأسفل\n2. اختر "إضافة إلى الشاشة الرئيسية"\n3. اضغط "إضافة"');
-          } else {
-            alert('اضغط على قائمة المتصفح (⋮) ثم اختر "تثبيت التطبيق" أو "إضافة إلى الشاشة الرئيسية"');
-          }
-        }
+        if (installBtn) installBtn.style.display = 'none';
+        if (navInstallBtn) navInstallBtn.style.display = 'none';
       }
+      return;
+    }
+
+    // iOS fallback
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    if (isIOS) {
+      alert('لتثبيت التطبيق على آيفون:\n\n1. اضغط زر المشاركة ⎋ في الأسفل\n2. اختر "إضافة إلى الشاشة الرئيسية"\n3. اضغط "إضافة"');
+      return;
+    }
+
+    // Android / Chrome / Edge fallback - try to guide better
+    // Some browsers show install icon in address bar
+    alert('ثبّت التطبيق بسهولة:\n\n• لو شايف أيقونة تثبيت في شريط العنوان (جنب اللينك) اضغط عليها\n• أو افتح قائمة المتصفح (⋮) واختر "تثبيت التطبيق" أو "إضافة إلى الشاشة الرئيسية"');
+  }
+
+  if (installBtn) {
+    installBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      triggerInstall();
+    });
+  }
+  if (navInstallBtn) {
+    navInstallBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      triggerInstall();
     });
   }
 
-  // Hide button after successful install
+  // Hide buttons after successful install
   window.addEventListener('appinstalled', () => {
     deferredPrompt = null;
     if (installBtn) installBtn.style.display = 'none';
+    if (navInstallBtn) navInstallBtn.style.display = 'none';
     console.log('PWA was installed');
   });
 </script>
